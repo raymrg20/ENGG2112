@@ -7,7 +7,7 @@ import math
 
 # Configuration
 dir_with_examples = './imagecopies'
-files_per_row = 3
+#files_per_row = 3
 
 # List the directory and perform computations
 files_in_dir = os.listdir(dir_with_examples)
