@@ -35,6 +35,6 @@ def get_center_color(image_path, region_size=50):
     return avg_color
 
 # Example usage
-image_path = 'image.jpg'
-avg_color = get_center_color(C:\Users\Hp\OneDrive\Documents\GitHub\ENGG2112\1.jpg)
-print("Average RGB color:", avg_color)
+image_path = '1.jpg'
+avg_color = get_center_color(image_path)
+print("Center pixel RGB color:", avg_color)
