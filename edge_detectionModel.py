@@ -19,6 +19,7 @@ def create_edge_detection_model(input_shape):
     model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
     return model
 
+# Input of the original image
 model = create_edge_detection_model(input_shape=(256, 256, 1))
 model.summary()
 

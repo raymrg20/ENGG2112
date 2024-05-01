@@ -35,8 +35,9 @@ image = cv2.imread('pear.jpg')
 features = extract_image(image, low_threshold=50, high_threshold=100)
 
 processed_image = features.reshape(image.shape[0], image.shape[1])
-
+filename = 'processed_image.png'
 cv2.imshow('processed_image', processed_image)
+cv2.imwrite(filename, processed_image)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
 
