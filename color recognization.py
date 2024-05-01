@@ -1,40 +1,29 @@
-from PIL import Image
+import cv2
 
-def get_center_color(image_path, region_size=50):
-    # Open the image
-    img = Image.open(image_path)
-
+def pixelate(image, pixel_size):
     # Get the dimensions of the image
-    width, height = img.size
+    height, width = image.shape[:2]
 
-    # Define the coordinates of the center
-    center_x = width // 2
-    center_y = height // 2
+    # Resize the image to smaller dimensions
+    small_image = cv2.resize(image, (width // pixel_size, height // pixel_size))
 
-    # Define the region of interest (ROI) around the center
-    left = max(0, center_x - region_size // 2)
-    top = max(0, center_y - region_size // 2)
-    right = min(width, center_x + region_size // 2)
-    bottom = min(height, center_y + region_size // 2)
+    # Enlarge the small image to original size
+    pixelated_image = cv2.resize(small_image, (width, height), interpolation=cv2.INTER_NEAREST)
 
-    # Crop the image to the ROI
-    roi = img.crop((left, top, right, bottom))
+    return pixelated_image
 
-    # Convert the ROI to RGB mode
-    roi_rgb = roi.convert('RGB')
+# Load the image
+image_path = "apple.jpg"
+original_image = cv2.imread(image_path)
 
-    # Get pixel data from the cropped region
-    pixels = list(roi_rgb.getdata())
+# Set the pixel size for pixelation (adjust as needed)
+pixel_size = 25
 
-    # Calculate the average color
-    avg_color = [
-        sum(pixel[i] for pixel in pixels) // len(pixels)
-        for i in range(3)
-    ]
+# Pixelate the image
+pixelated_image = pixelate(original_image, pixel_size)
 
-    return avg_color
-
-# Example usage
-image_path = '1.jpg'
-avg_color = get_center_color(image_path)
-print("Center pixel RGB color:", avg_color)
+# Display the original and pixelated images
+cv2.imshow("Original Image", original_image)
+cv2.imshow("Pixelated Image", pixelated_image)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
