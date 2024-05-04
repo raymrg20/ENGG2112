@@ -35,7 +35,7 @@ def create_edge_detection_classification_model(input_shape, num_classes):
     return model
 
 input_shape = (256, 256, 1)
-num_classes = 10  # Example: Assume 10 different classes for classification
+num_classes = 10  # 10 different classes for classification
 
 model = create_edge_detection_classification_model(input_shape, num_classes)
 model.summary()
@@ -52,7 +52,7 @@ def prepare_image_and_label(image_path, target_size=(256, 256)):
     return img.reshape(target_size + (1,)), edges.reshape(target_size + (1,))
 
 # Load image and prepare data
-image_path = 'pear.jpg'  # Ensure the image is available at this path
+image_path = 'pear.jpg'
 image, edges = prepare_image_and_label(image_path)
 
 # Convert to numpy arrays and add batch dimension
@@ -60,7 +60,7 @@ image = np.array([image])
 edges = np.array([edges])
 
 # Dummy classification label (since we don't have actual classes)
-class_labels = np.array([0])  # assuming '0' is a class index
+class_labels = np.array([0])
 
 # Train the model
 model.fit(image, {'edge_output': edges, 'class_output': class_labels}, epochs=5, batch_size=1)
@@ -81,7 +81,7 @@ plt.axis('off')
 
 # Plot the edge probability map from the model prediction
 plt.subplot(1, 3, 2)
-plt.imshow(predictions[0][0, :, :, 0], cmap='gray')  # Make sure this is capturing the right slice
+plt.imshow(predictions[0][0, :, :, 0], cmap='gray')
 plt.title('Edge Probability Map')
 plt.axis('off')
 
