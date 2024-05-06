@@ -65,6 +65,5 @@ edge_labels = np.array(edge_labels)
 X_train, X_val, y_train, y_val = train_test_split(images, edge_labels, test_size=0.2, random_state=42)
 
 # Now use X_train, y_train for training and X_val, y_val for validation
-history = model.fit(X_train, {'edge_output': y_train}, validation_data=(X_val, {'edge_output': y_val}), epochs=5, batch_size=10)
-
+history = model.fit(X_train, {'edge_output': y_train}, validation_data=(X_val, {'edge_output': y_val}), epochs=1, batch_size=10)
 
