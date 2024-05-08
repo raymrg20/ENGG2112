@@ -66,4 +66,5 @@ X_train, X_val, y_train, y_val = train_test_split(images, edge_labels, test_size
 
 # Now use X_train, y_train for training and X_val, y_val for validation
 history = model.fit(X_train, {'edge_output': y_train}, validation_data=(X_val, {'edge_output': y_val}), epochs=1, batch_size=10)
+model.save(r"C:\Users\CYBORG 15\Documents\GitHub\ENGG2112\my_model.keras")
 
