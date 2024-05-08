@@ -45,6 +45,8 @@ def main():
 
         # Predict with the model
         predictions = model.predict(processed_frame)
+        if predictions < 0:
+            predictions = 0
         print(predictions)
         
         # Display the resulting frame
