@@ -1,6 +1,5 @@
 import cv2
 import numpy as np
-from fullyConnectedModel import create_edge_detection_classification_model
 import tensorflow as tf
 from tensorflow.keras.models import load_model
 
@@ -33,24 +32,20 @@ def main():
         
         if not ret:
             break
-        
-        # Apply edge detection
-        # edges = extract_image(frame,low_threshold,high_threshold)
-        # image = edges.reshape(frame.shape[0], frame.shape[1])
-        # pred = model.predict(image)
-        # print(pred)
 
         # Preprocess the frame
         processed_frame = preprocess_frame(extract_image(frame,low_threshold,high_threshold).reshape(frame.shape[0], frame.shape[1]))
 
         # Predict with the model
         predictions = model.predict(processed_frame)
-        if predictions < 0:
-            predictions = 0
-        print(predictions)
+        #class output index 7
+        fruit_present = predictions[1][0][6] > 0.5
+        print(fruit_present)
+        text = "Fruit Detected: Yes" if fruit_present else "Fruit Detected: No"
+        cv2.putText(frame, text, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
+
         
         # Display the resulting frame
-        #cv2.imshow('Edge Detection', edges.reshape(frame.shape[0], frame.shape[1]))
         cv2.imshow('Live', frame)
         # Break the loop when 'q' is pressed
         if cv2.waitKey(1) & 0xFF == ord('q'):
@@ -62,3 +57,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

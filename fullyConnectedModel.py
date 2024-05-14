@@ -31,7 +31,7 @@ input_shape = (256, 256, 1)
 model = create_edge_detection_classification_model(input_shape, num_classes=10)
 
 # Directory containing images
-folder_dir = 'Processed_Apples'
+folder_dir = 'Processed Fruits'
 
 def preprocess_image(image_path):
     img = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
@@ -52,12 +52,22 @@ def preprocess_image(image_path):
 images = []
 edge_labels = []
 
-for image_name in os.listdir(folder_dir):
-    image_path = os.path.join(folder_dir, image_name)
-    img, edges = preprocess_image(image_path)
-    if img is not None and edges is not None:
-        images.append(img)
-        edge_labels.append(edges)
+# for image_name in os.listdir(folder_dir):
+#     image_path = os.path.join(folder_dir, image_name)
+#     img, edges = preprocess_image(image_path)
+#     if img is not None and edges is not None:
+#         images.append(img)
+#         edge_labels.append(edges)
+
+for fruit_folder in os.listdir(folder_dir):
+    fruit_path = os.path.join(folder_dir, fruit_folder)
+    if os.path.isdir(fruit_path):
+        for image_name in os.listdir(fruit_path):
+            image_path = os.path.join(fruit_path, image_name)
+            img, edges = preprocess_image(image_path)
+            if img is not None and edges is not None:
+                images.append(img)
+                edge_labels.append(edges)
 
 images = np.array(images)
 edge_labels = np.array(edge_labels)
