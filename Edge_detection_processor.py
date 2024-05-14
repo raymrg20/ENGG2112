@@ -38,11 +38,11 @@ def process_images(input_folder, output_folder, low_threshold, high_threshold):
             print(f"Processed: {filename}")
 
 # Example usage
-input_folder = r"C:\Uni\AMME2112\fruits-360_dataset\fruits-360\Test\Apple Red 1"
+input_folder = r"C:\Uni\AMME2112\fruits-360_dataset\fruits-360\test-multiple_fruits"
 
 print("Input folder:", input_folder)
 
-output_folder = "Processed_Apples"
+output_folder = "Processed_Multiple_Fruits"
 low_threshold = 50
 high_threshold = 100
 process_images(input_folder, output_folder, low_threshold, high_threshold)
