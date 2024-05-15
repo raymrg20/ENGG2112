@@ -6,7 +6,7 @@ import os
 from sklearn.model_selection import train_test_split
 
 # Define the model architecture
-def create_edge_detection_classification_model(input_shape, num_classes=10):  # Assuming 10 classes arbitrarily
+def create_edge_detection_classification_model(input_shape, num_classes):  # Assuming 10 classes arbitrarily
     base_input = tf.keras.layers.Input(shape=input_shape)
     x = tf.keras.layers.Conv2D(32, (3, 3), activation='relu', padding='same')(base_input)
     x = tf.keras.layers.MaxPooling2D((2, 2))(x)
@@ -28,10 +28,12 @@ def create_edge_detection_classification_model(input_shape, num_classes=10):  # 
     return model
 
 input_shape = (256, 256, 1)
-model = create_edge_detection_classification_model(input_shape, num_classes=10)
+model = create_edge_detection_classification_model(input_shape, num_classes=8)
 
 # Directory containing images
 folder_dir = 'Processed Fruits'
+class_names = sorted(os.listdir(folder_dir))  # Sort to ensure label consistency
+class_indices = {name: index for index, name in enumerate(class_names)}
 
 def preprocess_image(image_path):
     img = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
@@ -51,7 +53,9 @@ def preprocess_image(image_path):
 # Create datasets
 images = []
 edge_labels = []
+class_labels = []
 
+# For apple only
 # for image_name in os.listdir(folder_dir):
 #     image_path = os.path.join(folder_dir, image_name)
 #     img, edges = preprocess_image(image_path)
@@ -59,22 +63,45 @@ edge_labels = []
 #         images.append(img)
 #         edge_labels.append(edges)
 
-for fruit_folder in os.listdir(folder_dir):
-    fruit_path = os.path.join(folder_dir, fruit_folder)
-    if os.path.isdir(fruit_path):
-        for image_name in os.listdir(fruit_path):
-            image_path = os.path.join(fruit_path, image_name)
-            img, edges = preprocess_image(image_path)
-            if img is not None and edges is not None:
-                images.append(img)
-                edge_labels.append(edges)
+# for fruit_folder in os.listdir(folder_dir):
+#     fruit_path = os.path.join(folder_dir, fruit_folder)
+#     if os.path.isdir(fruit_path):
+#         for image_name in os.listdir(fruit_path):
+#             image_path = os.path.join(fruit_path, image_name)
+#             img, edges = preprocess_image(image_path)
+#             if img is not None and edges is not None:
+#                 images.append(img)
+#                 edge_labels.append(edges)
+
+for class_name in class_names:
+    class_dir = os.path.join(folder_dir, class_name)
+    class_index = class_indices[class_name]
+    for image_name in os.listdir(class_dir):
+        image_path = os.path.join(class_dir, image_name)
+        img, edges = preprocess_image(image_path)
+        if img is not None and edges is not None:
+            images.append(img)
+            edge_labels.append(edges)
+            class_labels.append(class_index)
 
 images = np.array(images)
 edge_labels = np.array(edge_labels)
+class_labels = np.array(class_labels)
 
-X_train, X_val, y_train, y_val = train_test_split(images, edge_labels, test_size=0.2, random_state=42)
+# X_train, X_val, y_train, y_val = train_test_split(images, edge_labels, test_size=0.2, random_state=42)
 
-# Now use X_train, y_train for training and X_val, y_val for validation
-history = model.fit(X_train, {'edge_output': y_train}, validation_data=(X_val, {'edge_output': y_val}), epochs=1, batch_size=10)
+# # Now use X_train, y_train for training and X_val, y_val for validation
+# #history = model.fit(X_train, {'edge_output': y_train}, validation_data=(X_val, {'edge_output': y_val}), epochs=1, batch_size=10)
+# history = model.fit(X_train, [y_train, y_train], validation_data=(X_val, [y_val, y_val]), epochs=1, batch_size=10)
+
+
+X_train, X_val, y_train, y_val = train_test_split(images, list(zip(edge_labels, class_labels)), test_size=0.2, random_state=42)
+edge_labels_train, class_labels_train = zip(*y_train)
+edge_labels_val, class_labels_val = zip(*y_val)
+
+# Train model
+history = model.fit(X_train, {'edge_output': np.array(edge_labels_train), 'class_output': np.array(class_labels_train)},
+                    validation_data=(X_val, {'edge_output': np.array(edge_labels_val), 'class_output': np.array(class_labels_val)}),
+                    epochs=1, batch_size=10)
 model.save(r"C:\Users\CYBORG 15\Documents\GitHub\ENGG2112\my_model.keras")
 
