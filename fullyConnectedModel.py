@@ -55,24 +55,6 @@ images = []
 edge_labels = []
 class_labels = []
 
-# For apple only
-# for image_name in os.listdir(folder_dir):
-#     image_path = os.path.join(folder_dir, image_name)
-#     img, edges = preprocess_image(image_path)
-#     if img is not None and edges is not None:
-#         images.append(img)
-#         edge_labels.append(edges)
-
-# for fruit_folder in os.listdir(folder_dir):
-#     fruit_path = os.path.join(folder_dir, fruit_folder)
-#     if os.path.isdir(fruit_path):
-#         for image_name in os.listdir(fruit_path):
-#             image_path = os.path.join(fruit_path, image_name)
-#             img, edges = preprocess_image(image_path)
-#             if img is not None and edges is not None:
-#                 images.append(img)
-#                 edge_labels.append(edges)
-
 for class_name in class_names:
     class_dir = os.path.join(folder_dir, class_name)
     class_index = class_indices[class_name]
@@ -87,13 +69,6 @@ for class_name in class_names:
 images = np.array(images)
 edge_labels = np.array(edge_labels)
 class_labels = np.array(class_labels)
-
-# X_train, X_val, y_train, y_val = train_test_split(images, edge_labels, test_size=0.2, random_state=42)
-
-# # Now use X_train, y_train for training and X_val, y_val for validation
-# #history = model.fit(X_train, {'edge_output': y_train}, validation_data=(X_val, {'edge_output': y_val}), epochs=1, batch_size=10)
-# history = model.fit(X_train, [y_train, y_train], validation_data=(X_val, [y_val, y_val]), epochs=1, batch_size=10)
-
 
 X_train, X_val, y_train, y_val = train_test_split(images, list(zip(edge_labels, class_labels)), test_size=0.2, random_state=42)
 edge_labels_train, class_labels_train = zip(*y_train)
